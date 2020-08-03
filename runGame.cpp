@@ -10,7 +10,7 @@ Player runGame::getCurrentPlayer(){
 }
 
 void runGame::setCurrentPlayer(Player:player){
-  this.currentPlayer = player;
+  return this.currentPlayer = player;
 }
 
 
@@ -40,6 +40,7 @@ void runGame::run(){
       passCount++; //パスカウントをインクリメント
       if(passCount>=2){ //パスが2回続いたら石を数えて終了
         board.countStone();
+        break;
       }else{ //パスが連続でない時はプレイヤー交代
         if(currentPlayer.get_PlayerId() = 1){
          setCurrentPlayer(player2);
@@ -49,4 +50,5 @@ void runGame::run(){
       }
     }
   }
+  printf("お疲れさまでした\n");
 }
