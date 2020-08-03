@@ -5,20 +5,12 @@ using namespace std;
 #include "Player.h"
 #include "Board.h"
 
-Player::Player(){
-
-}
-
-Player::~Player(){
-
-}
-
 Player runGame::getCurrentPlayer(){
   return currentPlayer;
 }
 
 void runGame::setCurrentPlayer(Player:player){
-  currentPlayer = player;
+  this.currentPlayer = player;
 }
 
 
@@ -35,7 +27,7 @@ void runGame::run(){
     if((board.judgePass() == true){
       passCount=0; //パスカウントを初期化
       board.dispBoard(); //盤の状態を表示
-      while(currentPlayer.changePlayer(player.getPlayerId())==false){ //置けない場所に入力されたら進まない
+      while(currentPlayer.playerInput()==false){ //置けない場所に入力されたら進まない
       }
       board.changeColor();
       board.dispBoard();
@@ -49,7 +41,7 @@ void runGame::run(){
       if(passCount>=2){ //パスが2回続いたら石を数えて終了
         board.countStone();
       }else{ //パスが連続でない時はプレイヤー交代
-        if(currentPlayer.getPlayerId() = 1){
+        if(currentPlayer.get_PlayerId() = 1){
          setCurrentPlayer(player2);
         }else{
          setCurrentPlayer(player1);

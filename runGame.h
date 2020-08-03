@@ -8,11 +8,13 @@ class runGame{
      Player currentPlayer; //ターン中のプレイヤー
 
   public:
-    Player();
-    virtual ~Player()
-    void run(); //実行
+    /*currentPlayerのアクセサ*/
     Player getCurrentPlayer();
     void setCurrentPlayer(Player player);
+
+
+    void run(); //実行
+
 }
 
 #endif /*RUNGAME_H_*/
