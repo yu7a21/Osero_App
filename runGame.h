@@ -11,8 +11,8 @@ class runGame{
     Player();
     virtual ~Player()
     void run(); //実行
-    Player GetCurrentPlayer();
-    void SetCurrentPlayer(Player player);
+    Player getCurrentPlayer();
+    void setCurrentPlayer(Player player);
 }
 
 #endif /*RUNGAME_H_*/

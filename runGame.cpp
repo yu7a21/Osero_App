@@ -13,11 +13,11 @@ Player::~Player(){
 
 }
 
-Player runGame::GetCurrentPlayer(){
+Player runGame::getCurrentPlayer(){
   return currentPlayer;
 }
 
-void runGame::SetCurrentPlayer(Player:player){
+void runGame::setCurrentPlayer(Player:player){
   currentPlayer = player;
 }
 
@@ -28,31 +28,31 @@ void runGame::run(){
   Player player1 = new Player(1);
   Player Player2 = new Player(2);
   int passCount = 0;
-  SetCurrentPlayer(player1); //先手プレイヤーをplayer1に設定
+  setCurrentPlayer(player1); //先手プレイヤーをplayer1に設定
 
   //メインループ
   while(){
     if((board.judgePass() == true){
       passCount=0; //パスカウントを初期化
       board.dispBoard(); //盤の状態を表示
-      while(currentPlayer.changePlayer(player.GetPlayerId())==false){ //置けない場所に入力されたら進まない
+      while(currentPlayer.changePlayer(player.getPlayerId())==false){ //置けない場所に入力されたら進まない
       }
       board.changeColor();
       board.dispBoard();
-      if(currentPlayer.GetPlayerId = 1){
-       SetCurrentPlayer(player2);
+      if(currentPlayer.GetPlayerId() = 1){
+       setCurrentPlayer(player2);
       }else{
-       SetCurrentPlayer(player1);
+       setCurrentPlayer(player1);
       }
     }else{
       passCount++; //パスカウントをインクリメント
       if(passCount>=2){ //パスが2回続いたら石を数えて終了
         board.countStone();
       }else{ //パスが連続でない時はプレイヤー交代
-        if(currentPlayer.GetPlayerId = 1){
-         SetCurrentPlayer(player2);
+        if(currentPlayer.getPlayerId() = 1){
+         setCurrentPlayer(player2);
         }else{
-         SetCurrentPlayer(player1);
+         setCurrentPlayer(player1);
         }
       }
     }
