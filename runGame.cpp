@@ -6,7 +6,7 @@ using namespace std;
 #include "Board.h"
 
 Player runGame::getCurrentPlayer(){
-  return currentPlayer;
+  return this.currentPlayer;
 }
 
 void runGame::setCurrentPlayer(Player:player){

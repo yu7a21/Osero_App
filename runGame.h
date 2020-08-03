@@ -12,7 +12,6 @@ class runGame{
     Player getCurrentPlayer();
     void setCurrentPlayer(Player player);
 
-
     void run(); //実行
 
 }
