@@ -24,12 +24,12 @@ void runGame::run(){
 
   //メインループ
   while(){
-    if((board.judgePass() == true){
+    if((board.judgePass(currentPlayer) == true){
       passCount=0; //パスカウントを初期化
       board.dispBoard(); //盤の状態を表示
       while(currentPlayer.playerInput()==false){ //置けない場所に入力されたら進まない
       }
-      board.changeColor();
+      board.changeColor(currentPlayer);
       board.dispBoard();
       if(currentPlayer.GetPlayerId() = 1){
        setCurrentPlayer(player2);

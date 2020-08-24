@@ -27,6 +27,6 @@ bool Player::playerInput(){
     printf("0以上7以下の数字で入力してください\n");
     return false;
   }
-  changeBoard(length,width);
+  changeBoard(length,width,this.get_PlayerID);
   return true;
 }
