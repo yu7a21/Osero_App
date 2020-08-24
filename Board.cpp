@@ -23,7 +23,7 @@ Board::~Board()
 {
 }
 
-bool Board::judgeInput(){
+bool Board::judgeInput(Player currentPlayer){
     int i=inputX-1;
     int j=inputY-1;//配置した場所の左上
     int k,l;//増分
@@ -32,8 +32,7 @@ bool Board::judgeInput(){
     bool Flag=0;//OK:1 NO:0 //周りがすべて0なら0
     int mycolor;//=getplayerID //1:black 2:white
 
-    Player exPlayer=new Player();
-    mycolor=exPlayer.get_PlayerID;
+    mycolor=currentPlayer.get_PlayerID();
     
     do{
         if(i==-1 || i==8 || j==-1 || j==8 || board[i][j]==mycolor){
@@ -79,8 +78,8 @@ bool Board::judgeInput(){
     return Flag;
 }
 
-bool Board::judgePass(){
-    return judgeInput;
+bool Board::judgePass(Player currentPlayer){
+    return judgeInput(currentPlayer);
 }
 
 void Board::dispBoard(){
@@ -101,7 +100,7 @@ void Board::dispBoard(){
         }
 }
 
-void Board::changeColor(){
+void Board::changeColor(Player currentPlayer){
     int i=inputX-1;
     int j=inputY-1;//配置した場所の左上
     int tmp_i,tmp_j;
@@ -111,8 +110,7 @@ void Board::changeColor(){
     bool Flag=0;//OK:1 NO:0 //周りがすべて0なら0
     int mycolor;//=getplayerID //1:black 2:white
     
-    Player exPlayer=new Player();
-    mycolor=exPlayer.get_PlayerID;
+    mycolor=currentPlayer.get_PlayerID();
 
     do{
         tmp_i=i;
@@ -163,12 +161,11 @@ void Board::changeColor(){
     }while(count<=7);//1周分行う
 }
 
-void Board::changeBoard(int length,int width){
+void Board::changeBoard(int length,int width,int id){
     int mycolor;//ID取得しないとダメ
 
-    Player exPlayer=new Player();
-    mycolor=exPlayer.get_PlayerID;
-    
+    mycolor=id;
+
     inputX=length;
     inputY=width;
 
