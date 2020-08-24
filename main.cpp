@@ -4,8 +4,8 @@ using namespace std;
 #include "runGame.h"
 
 int main(){
-
-  runGame();
+  runGame runGame;
+  runGame.run();
 
   return 0;
 }
