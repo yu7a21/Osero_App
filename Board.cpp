@@ -166,6 +166,9 @@ void Board::changeColor(){
 void Board::changeBoard(int length,int width){
     int mycolor;//ID取得しないとダメ
 
+    Player exPlayer=new Player();
+    mycolor=exPlayer.get_PlayerID;
+    
     inputX=length;
     inputY=width;
 
