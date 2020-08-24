@@ -1,2 +1,2 @@
 all: Board.cpp Board.h main.cpp Player.cpp Player.h runGame.cpp runGame.h
-	g++ -o Osero.exe Board.cpp Board.h main.cpp Player.cpp Player.h runGame.cpp runGame.h
+	g++ -o Osero.out Board.cpp Board.h main.cpp Player.cpp Player.h runGame.cpp runGame.h

@@ -14,6 +14,6 @@ class runGame{
 
     void run(); //実行
 
-}
+};
 
 #endif /*RUNGAME_H_*/

@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "Board.h"
+#include<iostream>
+#include<cstdio>
 
 Player::Player(){
     set_PlayerID(0);
@@ -10,14 +12,15 @@ Player::Player(int ID){
 }
 
 void Player::set_PlayerID(int ID){
-  this.PlayerID = ID;
+  this->playerID = ID;
 }
 
 int Player::get_PlayerID(){
-  return this.PlayerID;
+  return this->playerID;
 }
 
 bool Player::playerInput(){
+  Board board;
   int length,width;
   printf("縦の入力\n");
   cin >> length;
@@ -27,6 +30,6 @@ bool Player::playerInput(){
     printf("0以上7以下の数字で入力してください\n");
     return false;
   }
-  changeBoard(length,width,this.get_PlayerID);
+  board.changeBoard(length,width,this->get_PlayerID());
   return true;
 }
