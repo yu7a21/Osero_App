@@ -11,5 +11,5 @@ public:
   Player(int ID);
   void set_PlayerID(int ID);
   int get_PlayerID();
-  bool playerInput(int N_player);
+  bool playerInput();
 }
