@@ -1,9 +1,8 @@
 #include<iostream>
-using namespace std;
-
 #include "runGame.h"
 #include "Player.h"
 #include "Board.h"
+using namespace std;
 
 Player runGame::getCurrentPlayer(){
   return this->currentPlayer;
@@ -16,19 +15,21 @@ void runGame::setCurrentPlayer(Player player){
 
 void runGame::run(){
   Board board;
-  //board.makeBoard(); //盤の状態を作成
+ // board.makeBoard(); //盤の状態を作成
   Player player1(1);
   Player player2(2);
   int passCount = 0;
   setCurrentPlayer(player1); //先手プレイヤーをplayer1に設定
 
+  board.dispBoard(); //盤の状態を表示
   //メインループ
-  while(1){
+   while(1){
+   
     if(board.judgePass(currentPlayer) == true){
       passCount=0; //パスカウントを初期化
-      board.dispBoard(); //盤の状態を表示
-      while(currentPlayer.playerInput()==false){ //置けない場所に入力されたら進まない
+      while(currentPlayer.playerInput(board)==false){ //置けない場所に入力されたら進まない
       }
+      board.changeBoard(currentPlayer.get_inputX(),currentPlayer.get_inputY(),currentPlayer.get_PlayerID());
       board.changeColor(currentPlayer);
       board.dispBoard();
       if(currentPlayer.get_PlayerID() == 1){

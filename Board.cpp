@@ -1,11 +1,34 @@
 #include "Board.h"
 #include "Player.h"
 #include <iostream>
-using namespace std;
+//using namespace std;
 class Board;
 class Player;
 
-Board::Board(/* args */)
+void nextWay(int *i,int *j, int count){
+    if(  (count==1) || (count==2) ){
+        *i=*i+1;
+    }else if( (count==3) || (count==4) ){
+        *j=*j+1;  
+    }else if( (count==5) || (count==6) ){
+        *i=*i-1;
+    }else{
+        *j=*j-1;
+    }
+}
+
+int errorCheckRange(int x,int y){
+    if( (x==-1) || (x==8) || (y==-1) || (y==8) ){
+       return -1;
+    }else{
+       return 1;
+    }
+}
+
+/****************/
+/*コンストラクタ*/
+/****************/
+Board::Board()
 {
     for(int x=0;x<8;x++){
         for(int y=0;y<8;y++){
@@ -15,163 +38,307 @@ Board::Board(/* args */)
 
     board[3][3]=1;
     board[3][4]=2;
-    board[4][3]=1;
-    board[4][4]=2;
+    board[4][3]=2;
+    board[4][4]=1;
 }
 
+/**************/
+/*デストラクタ*/
+/**************/
 Board::~Board()
 {
 }
 
+/**********************************/
+/*入力可能なマスが存在するか調べる*/
+/**********************************/
 bool Board::judgeInput(Player currentPlayer){
-    int i=inputX-1;
-    int j=inputY-1;//配置した場所の左上
-    int k,l;//増分
-    int count=0;
-    int flag[8];//周りの分のフラグ
-    bool Flag=0;//OK:1 NO:0 //周りがすべて0なら0
-    int mycolor;//=getplayerID //1:black 2:white
+    int countMyStone[8]={0,0,0,0,0,0,0,0};
+    int countOtherStone[8]={0,0,0,0,0,0,0,0};
+    int mycolor=currentPlayer.get_PlayerID();
+    int countWayCheck=1;
+    int judgeBoard[8][8];
+    int a=0;
+    int *i;
+    int *j;
+    int tmpi;
+    int tmpj;
+    int i0=0;
+    int j0=0;
+    int k;
+    int l;
 
-    mycolor=currentPlayer.get_PlayerID();
-    
-    do{
-        if(i==-1 || i==8 || j==-1 || j==8 || board[i][j]==mycolor){
-            //何もしない(ひっくり返せない)
-            flag[count]=0;
-        }else{//延長線上を調べる
-            k=i-inputX;
-            l=j-inputY;//進む方向
-            do{//mycolorが見つかるまで繰り替えす
-                if(board[i+k][j+l] != mycolor){
-                    i=i+k;
-                    j=j+l;
-                }else if(i+k==-1 || i+k==8 || j+l==-1 || j+l==8 ){
-                    //mycolorが見つからない
-                    flag[count]=0;
-                    break;
-                }else{
-                    flag[count]=1;
-                    break;//mycolorが見つかった
-                }
-            } while (1); 
-        }
-        //i,jの進め方
-        if(0<=count && count<=1){
-            i++;
-        }else if(2<=count && count<=3){
-            j--;
-        }else if(4<=count && count<=5){
-            i--;
-        }else{
-            i++;
-        }
-        count++;
+    i=&i0;
+    j=&j0;
 
-    }while(count<=7);//1周分行う
-
-    for(int m=0;m<count;m++){
-        if(flag[m]==1){//一箇所でもひっくり返れば良い
-            Flag=1;
+    for(int x=0;x<8;x++){
+        for(int y=0;y<8;y++){
+            judgeBoard[x][y]=2;
         }
     }
 
-    return Flag;
+    for(int x=0;x<8;x++){
+        for(int y=0;y<8;y++){
+            if(board[x][y]!= 0){
+
+            }else{
+                *i=x-1;
+                *j=y-1;
+                do{       
+                    tmpi=*i;
+                    tmpj=*j;
+                    if( errorCheckRange(*i,*j)==-1 ){
+                        nextWay(i,j,countWayCheck);
+                        countWayCheck++;              
+                    }else if( ((abs(*i-x)==1) && (abs(*j-y)==1)) && board[*i][*j]==mycolor){
+                        nextWay(i,j,countWayCheck);
+                        countWayCheck++;
+                    }else{
+                        k=*i-x;
+                        l=*j-y;
+                        while( (errorCheckRange(*i,*j)==1)){
+                            if((board[*i][*j]==0)){
+                                break;
+                            }else if(board[*i][*j]==mycolor){
+                                countMyStone[countWayCheck-1]=countMyStone[countWayCheck-1]+1;
+                                break;
+                            }else{
+                                countOtherStone[countWayCheck-1]=countOtherStone[countWayCheck-1]+1; 
+                            }
+                            *i=*i+k;
+                            *j=*j+l;
+                        }
+                    *i=tmpi;
+                    *j=tmpj;
+                    nextWay(i,j,countWayCheck);
+                    countWayCheck++;   
+                    }
+                }while (countWayCheck<=8);
+                countWayCheck=1;
+            }
+          
+            for(int n=0;n<8;n++){
+                if(countMyStone[n]>=1 && countOtherStone[n]>=1){
+                    a++;
+                }
+                countMyStone[n]=countOtherStone[n]=0;
+            }
+            if(a>=1){
+                judgeBoard[x][y]=1;
+            }else{
+                judgeBoard[x][y]=0;
+            }
+            a=0;
+        }//roop1
+    }//roop2
+
+    bool r=false;
+    for(int x=0;x<8;x++){
+        for(int y=0;y<8;y++){
+            if(judgeBoard[x][y]==1){
+                r=true;
+            }
+        }
+    }
+    return r;    
 }
 
+/********************************/
+/*入力したマスに意味があるか確認*/
+/********************************/
+bool Board::judgeInputCin(int x,int y,int mycolor){
+    int countMyStone[8]={0,0,0,0,0,0,0,0};
+    int countOtherStone[8]={0,0,0,0,0,0,0,0};
+    int countWayCheck=1;
+    int a=0;
+    int *i;
+    int *j;
+    int i0=0;
+    int j0=0;
+    int tmpi;
+    int tmpj;
+    int k;
+    int l;
+    int judgeBoard[8][8];
+
+    i=&i0;
+    j=&j0;
+
+    if(board[x][y]!= 0){
+               
+    }else{
+        *i=x-1;
+        *j=y-1;
+        do{       
+            tmpi=*i;
+            tmpj=*j;
+            if( errorCheckRange(*i,*j)==-1 ){
+                nextWay(i,j,countWayCheck);
+                countWayCheck++;              
+            }else if( ((abs(*i-x)==1) && (abs(*j-y)==1)) && board[*i][*j]==mycolor){
+                nextWay(i,j,countWayCheck);
+                countWayCheck++;
+            }else{
+                k=*i-x;
+                l=*j-y;
+                while( (errorCheckRange(*i,*j)==1)){
+                    if((board[*i][*j]==0)){
+                        break;
+                    }else if(board[*i][*j]==mycolor){
+                        countMyStone[countWayCheck-1]=countMyStone[countWayCheck-1]+1;
+                        break;
+                    }else{
+                        countOtherStone[countWayCheck-1]=countOtherStone[countWayCheck-1]+1; 
+                    }
+                    *i=*i+k;
+                    *j=*j+l;
+                }
+                *i=tmpi;
+                *j=tmpj;
+                nextWay(i,j,countWayCheck);
+                countWayCheck++;   
+                }
+        }while (countWayCheck<=8);
+        countWayCheck=1;
+    }
+          
+    for(int n=0;n<8;n++){
+        if(countMyStone[n]>=1 && countOtherStone[n]>=1){
+            a++;
+        }
+            countMyStone[n]=countOtherStone[n]=0;
+    }
+    if(a>=1){
+        judgeBoard[x][y]=1;
+    }else{
+        judgeBoard[x][y]=0;
+    }
+       
+    bool r=false;
+   
+    if(judgeBoard[x][y]==1){
+        r=true;
+    }
+    
+    return r;    
+}
+
+/******************/
+/*パスの判断を行う*/
+/******************/
 bool Board::judgePass(Player currentPlayer){
     return judgeInput(currentPlayer);
 }
 
+/**********/
+/*盤の表示*/
+/**********/
 void Board::dispBoard(){
-    cout << "+--+--+--+--+--+--+--+--+" <<endl;
+    cout << "   +  0  +  1  +  2  +  3  +  4  +  5  +  6  +  7  +" <<endl;
+    cout << "+  +-----+-----+-----+-----+-----+-----+-----+-----+" <<endl;
         for (int i = 0; i < 8; i++) {
-            cout << "|" <<endl;
+            cout <<i<<"  "<<"|" ;
             for (int j = 0; j < 8; j++) {
-                if (board[i][j] == 1) {
-                    cout<<"○|"<<endl;
-                } else if (board[i][j] == 2) {
-                    cout<<"●|"<<endl;
+                if (board[j][i] == 1) {
+                    cout<<"  ○  |";
+                } else if (board[j][i] == 2) {
+                    cout<<"  ●  |";
                 } else {
-                    cout<<"  |"<<endl;
+                    cout<<"     |";
                 }
             }
-          //  System.out.println();
-            cout<<"+--+--+--+--+--+--+--+--+"<<endl;
+            cout<<""<<endl;
+            cout<<"+  +-----+-----+-----+-----+-----+-----+-----+-----+"<<endl;
         }
 }
 
+/**********/
+/*石の反転*/
+/**********/
 void Board::changeColor(Player currentPlayer){
-    int i=inputX-1;
-    int j=inputY-1;//配置した場所の左上
-    int tmp_i,tmp_j;
-    int k,l;//増分
-    int count=0;
-    int flag[8];//周りの分のフラグ
-    bool Flag=0;//OK:1 NO:0 //周りがすべて0なら0
-    int mycolor;//=getplayerID //1:black 2:white
-    
-    mycolor=currentPlayer.get_PlayerID();
+    int countMyStone[8]={0,0,0,0,0,0,0,0};
+    int countOtherStone[8]={0,0,0,0,0,0,0,0};
+    int mycolor=currentPlayer.get_PlayerID();
+    int x=currentPlayer.get_inputX();
+    int y=currentPlayer.get_inputY();
+    int othercolor;
+    int countWayCheck=1;
+    int a=0;
+    int *i;
+    int *j;
+    int i0=0;
+    int j0=0;
+    int tmpi;
+    int tmpj;
+    int k;
+    int l;
+    int judgeBoard[8][8];
+    int flag=0;
 
-    do{
-        tmp_i=i;
-        tmp_j=j;
+    i=&i0;
+    j=&j0;
 
-        if(i==-1 || i==8 || j==-1 || j==8 || board[i][j]==mycolor){
-            //何もしない(ひっくり返せない)
-            flag[count]=0;
-        }else{//延長線上を調べる
-            k=i-inputX;
-            l=j-inputY;//進む方向
-            do{//mycolorが見つかるまで繰り替えす
-                if(board[i+k][j+l] != mycolor){
-                    i=i+k;
-                    j=j+l;
-                }else if(i+k==-1 || i+k==8 || j+l==-1 || j+l==8 ){
-                    //mycolorが見つからない
-                    flag[count]=0;
-                    break;
-                }else{
-                    flag[count]=1;
-                    break;//mycolorが見つかった
+    if(board[x][y]== 0){
+               
+    }else{
+        *i=x-1;
+        *j=y-1;
+        do{       
+            tmpi=*i;
+            tmpj=*j;
+            if( errorCheckRange(*i,*j)==-1 ){
+                nextWay(i,j,countWayCheck);
+                countWayCheck++;              
+            }else if( ((abs(*i-x)==1) && (abs(*j-y)==1)) && board[*i][*j]==mycolor){
+                nextWay(i,j,countWayCheck);
+                countWayCheck++;
+            }else{
+                a=0;
+                flag=0;
+                k=*i-x;
+                l=*j-y;
+                while( (errorCheckRange(*i,*j)==1)){
+                    if((board[*i][*j]==0)){
+                        break;
+                    }else if(board[*i][*j]==mycolor){
+                        countMyStone[countWayCheck-1]=countMyStone[countWayCheck-1]+1;
+                        a++;
+                        flag=1;
+                        break;
+                    }else{
+                        countOtherStone[countWayCheck-1]=countOtherStone[countWayCheck-1]+1; 
+                        a++;
+                    }
+                    *i=*i+k;
+                    *j=*j+l;
                 }
-            } while (1); 
-        }
-        //inputX,Yへ、 ひっくり返しながら戻る
-        do{
-        board[i][j]==mycolor;
-        i=i-k;
-        j=j-l;
-        }while(inputX==i && inputY==j);
-
-        i=tmp_i;
-        j=tmp_j;
-
-        //i,jの進め方
-        if(0<=count && count<=1){
-            i++;
-        }else if(2<=count && count<=3){
-            j--;
-        }else if(4<=count && count<=5){
-            i--;
-        }else{
-            i++;
-        }
-        count++;
-
-    }while(count<=7);//1周分行う
+                if(flag==1){
+                    do{
+                        *i=*i-k;
+                        *j=*j-l;
+                        board[*i][*j]=mycolor;
+                    }while(*i!=x || *j!=y);
+                }
+                *i=tmpi;
+                *j=tmpj;
+                nextWay(i,j,countWayCheck);
+                countWayCheck++;   
+            }
+        }while (countWayCheck<=8);
+                countWayCheck=1;
+    }
 }
 
-void Board::changeBoard(int length,int width,int id){
-    int mycolor;//ID取得しないとダメ
-
-    mycolor=id;
-
-    inputX=length;
-    inputY=width;
-
-    board[inputX][inputY]=mycolor;
+/************/
+/*入力を反映*/
+/************/
+void Board::changeBoard(int width,int length,int mycolor){
+    board[width][length]=mycolor;
 }
 
+/************/
+/*勝敗を確認*/
+/************/
 void Board::countStone(){
     int p1=0,p2=0;
 
@@ -184,7 +351,7 @@ void Board::countStone(){
             }
         }
     }
-
+    cout<<"Player1:"<<p1<<"Player2:"<<p2<<endl;
     if(p1>p2){
         cout << "Player1の勝利" << endl;
     }else if(p1<p2){
